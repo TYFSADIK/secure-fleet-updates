@@ -1,0 +1,13 @@
+# Confirms the trial slot only after the robot stack is healthy.
+[Unit]
+Description=Fleet OTA health confirm
+After=network-online.target rover-stack.service
+Requires=rover-stack.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/local/bin/rover-healthcheck --timeout 90
+ExecStart=/usr/local/bin/fleet-ota confirm -dir /var/lib/fleet-ota
+
+[Install]
+WantedBy=multi-user.target
